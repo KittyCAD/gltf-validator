@@ -12,7 +12,7 @@ fn get_download_url() -> String {
     )
 }
 
-#[cfg(target_os = "linx")]
+#[cfg(target_os = "linux")]
 fn get_download_url() -> String {
     format!(
         "{}/{}/gltf_validator-{}-linux64.tar.xz",

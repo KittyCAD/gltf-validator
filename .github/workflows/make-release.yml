@@ -1,0 +1,45 @@
+on:
+  push:
+    tags:
+      - v*
+name: make-release
+jobs:
+  makerelease:
+    name: make release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install latest rust
+        uses: actions-rs/toolchain@v1
+        with:
+            toolchain: stable
+            override: true
+            components: rustfmt, clippy
+
+      - name: Rust Cache
+        uses: Swatinem/rust-cache@v2.6.0
+
+      - name: Install ffmpeg
+        run: |
+          sudo apt update
+          sudo apt install \
+            ffmpeg \
+            libavformat-dev \
+            libavutil-dev \
+            libclang-dev \
+            libswscale-dev \
+            --no-install-recommends
+
+      - name: cargo test
+        shell: bash
+        run: |
+          cargo test --all
+
+      - name: Publish release
+        shell: bash
+        run: |
+          cargo publish -p twenty-twenty --token ${{secrets.CARGO_TOKEN}}
+
+      - name: Create a Release
+        uses: softprops/action-gh-release@v1

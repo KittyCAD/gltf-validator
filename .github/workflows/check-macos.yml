@@ -1,0 +1,41 @@
+name: check-macos
+on:
+  pull_request:
+    paths:
+      - '**.rs'
+      - .github/workflows/check-macos.yml
+      - Cargo.lock
+      - Cargo.toml
+      - rust-toolchain
+      - rust-toolchain.toml
+  push:
+    branches: main
+    paths:
+      - '**.rs'
+      - .github/workflows/check-macos.yml
+      - Cargo.lock
+      - Cargo.toml
+      - rust-toolchain
+      - rust-toolchain.toml
+jobs:
+  macos:
+    name: check-on-macos
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Install latest rust
+        uses: actions-rs/toolchain@v1
+        with:
+            toolchain: stable
+            override: true
+
+      - name: Rust Cache
+        uses: Swatinem/rust-cache@v2.6.0
+
+      - name: cargo check (macOS)
+        shell: bash
+        run: |
+          cargo check

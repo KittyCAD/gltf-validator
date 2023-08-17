@@ -2,7 +2,7 @@
 name = "gltf-validator"
 description = "A rust wrapper around the Khronos group gltf-validator tool."
 repository = "https://github.com/kittycad/gltf-validator"
-version = "0.2.0"
+version = "0.2.1"
 edition = "2021"
 license = "MIT"
 
@@ -26,3 +26,6 @@ reqwest = { version = "0.11.18", default-features = false, features = ["blocking
 tar = "0.4.39"
 tempfile = "3.7.1"
 xz = "0.1.0"
+
+[package.metadata.docs.rs]
+rustc-args = ["--cfg", "docsrs"]

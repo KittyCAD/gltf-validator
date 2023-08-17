@@ -100,6 +100,10 @@ fn main() {
         return;
     }
 
+    if cfg!(docsrs) {
+        return;
+    }
+
     // We need to get the gltf_validator binary and put it in the path.
     install().unwrap();
 }

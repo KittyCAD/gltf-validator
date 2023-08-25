@@ -219,12 +219,16 @@ impl Drop for GltfValidator {
 /// Add the `gltf_validator` binary to a temporary directory.
 /// And our path.
 fn init() -> Result<std::path::PathBuf> {
+    use std::io::Write;
+
     let temp_dir = std::env::temp_dir();
 
     let installed_path = temp_dir.join("gltf_validator");
 
     // Write the binary bytes to the file.
-    std::fs::write(&installed_path, BINARY_BYTES)?;
+    let mut file = std::fs::File::create(&installed_path)?;
+    file.write_all(BINARY_BYTES)?;
+    file.flush()?;
 
     // Make sure the file is executable.
     #[cfg(unix)]

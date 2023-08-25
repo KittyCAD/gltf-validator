@@ -2,7 +2,7 @@
 name = "gltf-validator"
 description = "A rust wrapper around the Khronos group gltf-validator tool."
 repository = "https://github.com/kittycad/gltf-validator"
-version = "0.2.1"
+version = "0.2.2"
 edition = "2021"
 license = "MIT"
 

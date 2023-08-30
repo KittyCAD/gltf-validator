@@ -209,12 +209,12 @@ pub struct GltfValidator {
     installed_path: std::path::PathBuf,
 }
 
-impl Drop for GltfValidator {
-    fn drop(&mut self) {
-        // Delete the binary.
-        std::fs::remove_file(&self.installed_path).unwrap();
-    }
-}
+// impl Drop for GltfValidator {
+//     fn drop(&mut self) {
+//         // Delete the binary.
+//         std::fs::remove_file(&self.installed_path).unwrap();
+//     }
+// }
 
 /// Add the `gltf_validator` binary to a temporary directory.
 /// And our path.

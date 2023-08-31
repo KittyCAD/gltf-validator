@@ -228,7 +228,7 @@ fn init() -> Result<std::path::PathBuf> {
     // Write the binary bytes to the file.
     let mut file = std::fs::File::create(&installed_path)?;
     file.write_all(BINARY_BYTES)?;
-    file.flush()?;
+    file.sync_all()?;
 
     // Make sure the file is executable.
     #[cfg(unix)]

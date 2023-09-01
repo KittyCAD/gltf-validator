@@ -205,46 +205,32 @@ pub enum Transfer {
 const BINARY_BYTES: &[u8] = include_bytes!("../target/bin/gltf_validator");
 
 /// An instance of glTF validator.
+/// When GltfValidator is dropped TempPath is also dropped which will remove the binary
 pub struct GltfValidator {
-    installed_path: std::path::PathBuf,
-}
-
-impl Drop for GltfValidator {
-    fn drop(&mut self) {
-        // Delete the binary.
-        std::fs::remove_file(&self.installed_path).unwrap();
-    }
+    installed_path: tempfile::TempPath,
 }
 
 /// Add the `gltf_validator` binary to a temporary directory.
 /// And our path.
-fn init() -> Result<std::path::PathBuf> {
+fn init() -> Result<tempfile::TempPath> {
     use std::io::Write;
 
-    let temp_dir = std::env::temp_dir();
-
-    let installed_path = temp_dir.join("gltf_validator");
+    let mut file = tempfile::NamedTempFile::new()?;
 
     // Write the binary bytes to the file.
-    let mut file = std::fs::File::create(&installed_path)?;
     file.write_all(BINARY_BYTES)?;
-    file.flush()?;
 
+    let (underlying_file, installed_path) = file.into_parts();
     // Make sure the file is executable.
     #[cfg(unix)]
     {
         use std::os::unix::fs::PermissionsExt;
-        let mut perms = std::fs::metadata(&installed_path)?.permissions();
-        perms.set_mode(0o755);
-        std::fs::set_permissions(&installed_path, perms)?;
+        let perms = std::fs::Permissions::from_mode(0o755);
+        underlying_file.set_permissions(perms)?;
     }
 
-    let existing_path_var = std::env::var_os("PATH").unwrap_or_default();
-    let existing_paths = std::env::split_paths(&existing_path_var);
-    std::env::set_var(
-        "PATH",
-        std::env::join_paths(existing_paths.chain(std::iter::once(installed_path.clone())))?,
-    );
+    // Sync to make sure it all exists
+    underlying_file.sync_all()?;
 
     Ok(installed_path)
 }

@@ -73,7 +73,7 @@ fn install() -> Result<()> {
 
         // Move the file to the bin directory.
         let bin_path = tmp_dir.path().join("gltf_validator");
-        std::fs::rename(bin_path, bin_dir.join("gltf_validator"))?;
+        std::fs::copy(bin_path, bin_dir.join("gltf_validator"))?;
 
         // Delete the tmp_path tarball.
         std::fs::remove_file(tmp_path)?;

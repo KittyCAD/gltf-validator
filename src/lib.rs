@@ -243,9 +243,9 @@ impl GltfValidator {
     }
 
     /// Run gltf-validator on a specific file.
-    pub fn run(&self, path: &std::path::PathBuf) -> Result<ValidationReport> {
+    fn run_inner(&self, path: &std::path::Path) -> Result<ValidationReport> {
         if !path.exists() {
-            return Err(anyhow::anyhow!("File does not exist: {:?}", path));
+            return Err(anyhow::anyhow!("File does not exist: {}", path.display()));
         }
 
         // Shell out to gltf_validator.
@@ -261,5 +261,26 @@ impl GltfValidator {
         let report: ValidationReport = serde_json::from_str(&json_string)?;
 
         Ok(report)
+    }
+
+    /// Run gltf-validator on a specific file.
+    pub fn run<P>(&self, path: P) -> Result<ValidationReport>
+    where
+        P: AsRef<std::path::Path>,
+    {
+        self.run_inner(path.as_ref())
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn test_cube() -> Result<(), Box<dyn std::error::Error>> {
+        let path = "tests/cube.glb";
+        let validator = super::GltfValidator::new()?;
+        let report = validator.run(path)?;
+        assert_eq!(report.issues.num_errors, 0);
+        assert_eq!(report.issues.num_warnings, 0);
+        Ok(())
     }
 }

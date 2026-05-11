@@ -2,7 +2,7 @@ use anyhow::Result;
 
 const GLTF_VALIDATOR_BASE_URL: &str =
     "https://github.com/KhronosGroup/glTF-Validator/releases/download";
-const GLTF_VALIDATOR_VERSION: &str = "2.0.0-dev.3.8";
+const GLTF_VALIDATOR_VERSION: &str = "2.0.0-dev.3.10";
 
 #[cfg(target_os = "macos")]
 fn get_download_url() -> String {

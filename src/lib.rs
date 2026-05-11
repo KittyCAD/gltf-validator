@@ -202,7 +202,7 @@ pub enum Transfer {
     Custom,
 }
 
-const BINARY_BYTES: &[u8] = include_bytes!("../target/bin/gltf_validator");
+const BINARY_BYTES: &[u8] = include_bytes!(concat!(env!("OUT_DIR"), "/gltf_validator"));
 
 /// An instance of glTF validator.
 /// When GltfValidator is dropped TempPath is also dropped which will remove the binary

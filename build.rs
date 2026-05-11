@@ -21,10 +21,7 @@ fn get_download_url() -> String {
 }
 
 fn default_bin_dir() -> std::path::PathBuf {
-    let mut path = std::env::current_dir().unwrap();
-    path.push("target");
-    path.push("bin");
-    path
+    std::path::PathBuf::from(std::env::var("OUT_DIR").unwrap())
 }
 
 fn installed_path() -> std::path::PathBuf {

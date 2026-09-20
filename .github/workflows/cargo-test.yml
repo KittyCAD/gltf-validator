@@ -14,7 +14,9 @@ on:
       - Cargo.lock
       - .github/workflows/cargo-test.yml
   workflow_dispatch:
-permissions: read-all
+permissions:
+  contents: read
+  id-token: write
 name: cargo test
 jobs:
   cargotest:
@@ -41,9 +43,9 @@ jobs:
           cargo llvm-cov nextest --all --lcov --output-path lcov.info --test-threads=1 --no-fail-fast
 
       - name: Upload to codecov.io
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v7
         with:
-          token: ${{secrets.CODECOV_TOKEN}}
+          use_oidc: true
           fail_ci_if_error: true
           flags: unittests
           verbose: true
